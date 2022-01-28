@@ -1,6 +1,8 @@
 const { nanoid } = require('nanoid');
 const books = require('../books');
 
+// TODO: SET HANDLERS MODULAR
+
 // Kriteria 1
 const addBook = (request, h) => {
   const {
@@ -75,11 +77,31 @@ const addBook = (request, h) => {
 };
 
 // Kriteria 2
-const getAllBooks = (_request, h) => {
+const getAllBooks = (request, h) => {
   const newBookList = books.map((book) => {
     const { id, name, publisher } = book;
     return { id, name, publisher };
   });
+
+  // Query Parameter (Opsional)
+  const { name } = request.query;
+  if (name !== undefined) {
+    const booksShortVer = books.map((book) => ({
+      id: book.id,
+      name: book.name,
+      publisher: book.publisher,
+    }));
+    const filteredBooks = booksShortVer.filter((book) => {
+      const bookName = book.name.toLowerCase();
+      return bookName.includes(name.toLowerCase());
+    });
+    return {
+      status: 'success',
+      data: {
+        books: filteredBooks,
+      },
+    };
+  }
   const response = h.response({
     status: 'success',
     data: {
@@ -90,6 +112,7 @@ const getAllBooks = (_request, h) => {
   return response;
 };
 
+// Kriteria 3
 const getBookDetail = (request, h) => {
   const { id } = request.params;
   const requestedBook = books.filter((book) => book.id === id)[0];
@@ -109,6 +132,7 @@ const getBookDetail = (request, h) => {
   };
 };
 
+// Kriteria 4
 const updateBookById = (request, h) => {
   const { id } = request.params;
   const bookIndex = books.findIndex((book) => book.id === id);
@@ -167,6 +191,7 @@ const updateBookById = (request, h) => {
   };
 };
 
+// Kriteria 5
 const deleteBookById = (request, h) => {
   const { id } = request.params;
   const bookIndex = books.findIndex((book) => book.id === id);
