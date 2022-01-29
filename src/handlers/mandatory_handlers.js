@@ -1,7 +1,6 @@
 const { nanoid } = require('nanoid');
 const books = require('../books');
-
-// TODO: SET HANDLERS MODULAR
+const getShortInfoOfBooks = require('./helper_func');
 
 // Kriteria 1
 const addBook = (request, h) => {
@@ -78,19 +77,11 @@ const addBook = (request, h) => {
 
 // Kriteria 2
 const getAllBooks = (request, h) => {
-  const newBookList = books.map((book) => {
-    const { id, name, publisher } = book;
-    return { id, name, publisher };
-  });
+  const booksShortVer = getShortInfoOfBooks(books);
 
   // Query Parameter (Opsional)
-  const { name } = request.query;
+  const { name, reading, finished } = request.query;
   if (name !== undefined) {
-    const booksShortVer = books.map((book) => ({
-      id: book.id,
-      name: book.name,
-      publisher: book.publisher,
-    }));
     const filteredBooks = booksShortVer.filter((book) => {
       const bookName = book.name.toLowerCase();
       return bookName.includes(name.toLowerCase());
@@ -102,10 +93,51 @@ const getAllBooks = (request, h) => {
       },
     };
   }
+  if (reading !== undefined) {
+    let filteredBooks = [];
+    const isReading = reading === 1;
+    filteredBooks = books.filter((book) => book.reading === isReading);
+    return {
+      status: 'success',
+      data: {
+        books: getShortInfoOfBooks(filteredBooks),
+      },
+    };
+  }
+
+  if (finished !== undefined) {
+    if (finished === '1') {
+      const filteredBooks = books.filter((book) => book.finished === true);
+      return {
+        status: 'success',
+        data: {
+          books: getShortInfoOfBooks(filteredBooks),
+        },
+      };
+    }
+    if (finished === '0') {
+      const filteredBooks = books.filter(
+        (book) => book.readPage < book.pageCount,
+      );
+      console.log(filteredBooks);
+      return {
+        status: 'success',
+        data: {
+          books: getShortInfoOfBooks(filteredBooks),
+        },
+      };
+    }
+    return {
+      status: 'success',
+      data: {
+        books: booksShortVer,
+      },
+    };
+  }
   const response = h.response({
     status: 'success',
     data: {
-      books: newBookList,
+      books: booksShortVer,
     },
   });
   response.code(200);
