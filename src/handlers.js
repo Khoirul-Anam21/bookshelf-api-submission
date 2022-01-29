@@ -1,5 +1,5 @@
 const { nanoid } = require('nanoid');
-const books = require('../books');
+const books = require('./books');
 const getShortInfoOfBooks = require('./helper_func');
 
 // Kriteria 1
@@ -94,9 +94,8 @@ const getAllBooks = (request, h) => {
     };
   }
   if (reading !== undefined) {
-    let filteredBooks = [];
-    const isReading = reading === 1;
-    filteredBooks = books.filter((book) => book.reading === isReading);
+    const isReading = reading === '1';
+    const filteredBooks = books.filter((book) => book.reading === isReading);
     return {
       status: 'success',
       data: {
@@ -107,7 +106,7 @@ const getAllBooks = (request, h) => {
 
   if (finished !== undefined) {
     if (finished === '1') {
-      const filteredBooks = books.filter((book) => book.finished === true);
+      const filteredBooks = books.filter((book) => book.readPage === book.pageCount);
       return {
         status: 'success',
         data: {

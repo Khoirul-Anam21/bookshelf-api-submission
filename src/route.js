@@ -4,7 +4,7 @@ const {
   getBookDetail,
   updateBookById,
   deleteBookById,
-} = require('./handlers/mandatory_handlers');
+} = require('./handlers');
 
 const routes = [
   {

@@ -1,4 +1,4 @@
-// Get array of books with only id, name, publisher
+// Get array of books with only id, name, and publisher
 
 const getShortInfoOfBooks = (booksArray) => {
   const newArray = booksArray.map((book) => {
