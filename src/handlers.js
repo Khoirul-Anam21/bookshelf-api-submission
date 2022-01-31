@@ -2,6 +2,11 @@ const { nanoid } = require('nanoid');
 const books = require('./books');
 const getShortInfoOfBooks = require('./helper_func');
 
+const handleMain = () => ({
+  status: 'success',
+  message: 'Selamat datang di web saya',
+});
+
 // Kriteria 1
 const addBook = (request, h) => {
   const {
@@ -247,4 +252,5 @@ module.exports = {
   getBookDetail,
   updateBookById,
   deleteBookById,
+  handleMain,
 };

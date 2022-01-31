@@ -4,9 +4,15 @@ const {
   getBookDetail,
   updateBookById,
   deleteBookById,
+  handleMain,
 } = require('./handlers');
 
 const routes = [
+  {
+    method: 'GET',
+    path: '/',
+    handler: handleMain,
+  },
   {
     method: 'POST',
     path: '/books',
